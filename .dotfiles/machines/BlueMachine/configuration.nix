@@ -46,10 +46,10 @@
   # Disable PipeWire completely
   services.pipewire.enable = false;
 
-  # BOOT SCRIPT TO KILL PIPEWIRE AND ENSURE PULSEAUDIO
-  # This handles the implicit pipewire setup in the KDE module
+    # BOOT SCRIPT TO KILL PIPEWIRE AND ENSURE PULSEAUDIO + DEVICE DETECTION
+  # This handles the implicit modules deps AND detects additional devices
   systemd.services.fix-audio = {
-    description = "Kill PipeWire and ensure PulseAudio is running";
+    description = "Kill PipeWire, ensure PulseAudio, and set up device detection";
     wantedBy = [ "multi-user.target" ];
     after = [ "graphical-session.target" ];
     serviceConfig = {
@@ -73,17 +73,54 @@
           fi
         done
         
-        # Set up microphone properly
-        sleep 2
+        # Wait for PulseAudio to initialize
+        sleep 3
+        
+        # Auto-detect and configure audio devices
         for user_home in /home/*; do
           if [ -d "$user_home" ]; then
             user=$(basename "$user_home")
+            
+            # List all available sinks and sources
+            echo "=== Audio Devices for $user ==="
+            ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl list short sinks 2>/dev/null || true
+            ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl list short sources 2>/dev/null || true
+            
+            # Set default internal audio (fallback)
             ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl set-default-source alsa_input.pci-0000_00_1f.3.analog-stereo 2>/dev/null || true
+            ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl set-default-sink alsa_output.pci-0000_00_1f.3.analog-stereo 2>/dev/null || true
+            
+            # Auto-detect and prefer USB/external devices if available
+            usb_sink=$(${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl list short sinks 2>/dev/null | grep -i "usb\|headset\|wireless" | head -1 | cut -f2)
+            if [ -n "$usb_sink" ]; then
+              echo "Found external audio device: $usb_sink"
+              ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl set-default-sink "$usb_sink" 2>/dev/null || true
+            fi
+            
+            usb_source=$(${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl list short sources 2>/dev/null | grep -i "usb\|headset\|wireless" | head -1 | cut -f2)
+            if [ -n "$usb_source" ]; then
+              echo "Found external microphone: $usb_source"
+              ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl set-default-source "$usb_source" 2>/dev/null || true
+            fi
           fi
         done
+        
+        echo "Audio setup complete!"
       '';
     };
   };
+
+  # USB AUDIO DEVICE HOT-PLUG DETECTION
+  # Automatically switch to USB headsets when plugged in
+  services.udev.extraRules = ''
+    # USB Audio devices - trigger audio reconfiguration
+    SUBSYSTEM=="usb", ATTR{bInterfaceClass}=="01", ACTION=="add", RUN+="${pkgs.systemd}/bin/systemctl restart fix-audio.service"
+    SUBSYSTEM=="usb", ATTR{bInterfaceClass}=="01", ACTION=="remove", RUN+="${pkgs.systemd}/bin/systemctl restart fix-audio.service"
+    
+    # Audio devices - trigger reconfiguration  
+    SUBSYSTEM=="sound", ACTION=="add", RUN+="${pkgs.systemd}/bin/systemctl restart fix-audio.service"
+    SUBSYSTEM=="sound", ACTION=="remove", RUN+="${pkgs.systemd}/bin/systemctl restart fix-audio.service"
+  '';
 
   nixpkgs.config.permittedInsecurePackages = [
     "qtwebengine-5.15.19"
