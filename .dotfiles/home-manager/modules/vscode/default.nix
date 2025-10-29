@@ -25,7 +25,8 @@ in {
           "editor.smoothScrolling" = true;
           #          "editor.cursorBlinking" = "expand";
           "direnv.restart.automatic" = true;
-          "workbench.colorTheme" = "Darcula Solid";
+          "workbench.colorTheme" = "Material Deep Ocean";
+          "workbench.iconTheme" = "JetBrains Icon Theme";
           "clangd.path" = "${pkgs.clang-tools}/bin/clangd";
           "svelte.enable-ts-plugin" = true;
           "rust-analyzer" = {

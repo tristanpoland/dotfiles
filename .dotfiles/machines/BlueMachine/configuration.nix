@@ -26,45 +26,64 @@
 #};
 
 
-  # Lenovo Legion 7i Slim Mic feedback fix
+  # Lenovo Legion 7i Slim + Audio utilities
   environment.systemPackages = with pkgs; [
     wireguard-tools
     pavucontrol
     gnome-keyring
     libsecret
+    pulseaudio
+    alsa-utils
   ];
 
-  # Enable PipeWire with echo cancellation
-  services.pipewire = {
+  # SIMPLE, CLEAN PULSEAUDIO SETUP - TWO DEVICES ONLY
+  services.pulseaudio = {
     enable = true;
-    alsa.enable = true;
-    pulse.enable = true;
-
-    # Load the echo-cancel module by default (uses WebRTC AEC)
-    extraConfig.pipewire-pulse = {
-      "10-echo-cancel.conf" = {
-        "context.modules" = [
-          {
-            name = "libpipewire-module-echo-cancel";
-            args = {
-              "aec.method" = "webrtc";
-              "source.props" = {
-                "node.name" = "echoCancelSource";
-                "node.description" = "Echo-Cancelled Microphone";
-              };
-              "sink.props" = {
-                "node.name" = "echoCancelSink";
-                "node.description" = "Echo-Cancelled Output";
-              };
-            };
-          }
-        ];
-      };
-    };
+    support32Bit = true;
+    package = pkgs.pulseaudioFull;
   };
 
-  # Disable legacy PulseAudio
-  services.pulseaudio.enable = false;
+  # Disable PipeWire completely
+  services.pipewire.enable = false;
+
+  # BOOT SCRIPT TO KILL PIPEWIRE AND ENSURE PULSEAUDIO
+  # This handles the implicit pipewire setup in the KDE module
+  systemd.services.fix-audio = {
+    description = "Kill PipeWire and ensure PulseAudio is running";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "fix-audio" ''
+        # Kill any PipeWire processes
+        ${pkgs.systemd}/bin/systemctl --user stop pipewire pipewire-pulse wireplumber 2>/dev/null || true
+        ${pkgs.procps}/bin/pkill -f pipewire || true
+        ${pkgs.procps}/bin/pkill -f wireplumber || true
+        
+        # Remove PipeWire configs that might interfere
+        rm -rf /home/*/pipewire /home/*/.config/pipewire /home/*/.local/state/pipewire || true
+        
+        # Ensure PulseAudio is running for all users
+        for user_home in /home/*; do
+          if [ -d "$user_home" ]; then
+            user=$(basename "$user_home")
+            ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pulseaudio --kill 2>/dev/null || true
+            ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pulseaudio --start --daemonize 2>/dev/null || true
+          fi
+        done
+        
+        # Set up microphone properly
+        sleep 2
+        for user_home in /home/*; do
+          if [ -d "$user_home" ]; then
+            user=$(basename "$user_home")
+            ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl set-default-source alsa_input.pci-0000_00_1f.3.analog-stereo 2>/dev/null || true
+          fi
+        done
+      '';
+    };
+  };
 
   nixpkgs.config.permittedInsecurePackages = [
     "qtwebengine-5.15.19"
