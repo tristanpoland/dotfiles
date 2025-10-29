@@ -15,7 +15,7 @@ in {
       enable = true;
       enableCompletion = true;
       
-      # Nice, clean bash prompt with git info
+            # Nice, clean bash prompt with git info
       bashrcExtra = ''
         # Color definitions
         RED='\[\e[0;31m\]'
