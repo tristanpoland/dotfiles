@@ -18,14 +18,14 @@ in {
       # Nice, clean bash prompt with git info
       bashrcExtra = ''
         # Color definitions
-        RED='\[\033[0;31m\]'
-        GREEN='\[\033[0;32m\]'
-        YELLOW='\[\033[0;33m\]'
-        BLUE='\[\033[0;34m\]'
-        PURPLE='\[\033[0;35m\]'
-        CYAN='\[\033[0;36m\]'
-        WHITE='\[\033[0;37m\]'
-        RESET='\[\033[0m\]'
+        RED='\[\e[0;31m\]'
+        GREEN='\[\e[0;32m\]'
+        YELLOW='\[\e[0;33m\]'
+        BLUE='\[\e[0;34m\]'
+        PURPLE='\[\e[0;35m\]'
+        CYAN='\[\e[0;36m\]'
+        WHITE='\[\e[0;37m\]'
+        RESET='\[\e[0m\]'
         
         # Git prompt function
         git_prompt() {
