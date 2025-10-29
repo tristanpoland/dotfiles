@@ -33,7 +33,7 @@ in {
               git_status="\[\e[0;32m\]✓"
             fi
             
-            echo " \[\e[0;35m\](\[\e[0;36m\]$git_branch$git_status\[\e[0;35m\])"
+            echo " \[\e[0;35m\](\[\e[0;36m\]''${git_branch}''${git_status}\[\e[0;35m\])"
           fi
         }
         
