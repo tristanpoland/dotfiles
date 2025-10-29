@@ -58,7 +58,7 @@ in {
         # Misc aliases
         ":q" = "exit";
         ssh = "TERM=xterm-256color ssh";
-        rm = "coffin";
+        # rm = "coffin";
         cd = "z";
         cat = "bat";
         nd = "nix develop --command bash";
@@ -84,7 +84,7 @@ in {
     home.packages = with pkgs; [
       ripgrep-all   # better grep
       fd            # better find
-      # coffin is already in your inputs
+      #coffin        # safer rm
     ];
   };
 }

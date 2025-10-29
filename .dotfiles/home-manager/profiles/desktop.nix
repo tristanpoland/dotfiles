@@ -43,11 +43,11 @@
     btop
     wl-clipboard-rs
     github-desktop
-    microsoft-edge
+#   microsoft-edge
     claude-code
     bitwarden-desktop
     blender
-    #warp-terminal
+#   warp-terminal
     parsec-bin
     stremio
     zoom-us
@@ -56,5 +56,18 @@
     protonvpn-gui
     vlc
     mpv
+    openssl
+    protobuf
+    rust-analyzer # Used when running
+    pkg-config
+    alsa-lib
+    alsa-utils
+    libGL
+    vulkan-loader
+    vulkan-headers
+    vulkan-tools
+    wayland
+    wayland-protocols
+    wayland-scanner
   ];
 }

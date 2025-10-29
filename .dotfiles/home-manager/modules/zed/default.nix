@@ -25,7 +25,8 @@ in {
       ];
       extraPackages = [pkgs.nixd pkgs.nil];
       userSettings = {
-        theme = "Dracula";
+        icon_theme = "JetBrains New UI Icons (Dark)";
+        theme = "Material Theme Ocean High Contrast";
         inlay_hints = {
           enabled = true;
         };
@@ -38,7 +39,7 @@ in {
             formatter = "prettier";
           };
           TOML = {
-            formatter = "taplo";
+            formatter = "prettier";
           };
           Nix = {
             formatter = {
