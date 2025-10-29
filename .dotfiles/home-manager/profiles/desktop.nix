@@ -45,6 +45,7 @@
     github-desktop
     microsoft-edge
     bitwarden-desktop
+    blender
     #warp-terminal
     parsec-bin
     stremio
