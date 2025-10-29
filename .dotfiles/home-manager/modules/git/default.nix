@@ -13,7 +13,7 @@ in {
     programs.git = {
       enable = true;
       lfs.enable = true;
-      extraConfig = {
+      settings = {
         user = {
           name = "trident";
           email = "redstonecrafter126@@gmail.com";

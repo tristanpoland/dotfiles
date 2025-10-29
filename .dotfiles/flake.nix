@@ -92,17 +92,19 @@
         };
       };
     homeConfigurations = {
-      trident = {...}: {
-        imports =
-          [
-            ./home-manager/profiles/desktop.nix
-          ]
-          ++ builtins.attrValues self.homeManagerModules;
+      trident = inputs.home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        extraSpecialArgs = {
+          inherit inputs self;
+        };
+        modules = [
+          ./home-manager/profiles/desktop.nix
+        ] ++ builtins.attrValues self.homeManagerModules;
       };
     };
     packages = forAllSystems (
       system: {
-        default = self.nixosConfigurations.live.config.system.build.isoImage;
+        default = self.nixosConfigurations.BlueMachine.config.system.build.toplevel;
       }
     );
   };
