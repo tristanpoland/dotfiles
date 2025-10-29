@@ -15,8 +15,6 @@ in {
       enable = true;
       enableCompletion = true;
       
-            # Nice, clean bash prompt with git info
-      bashrcExtra = ''
       # Nice, clean bash prompt with git info
       bashrcExtra = ''
         # Simple colored prompt
