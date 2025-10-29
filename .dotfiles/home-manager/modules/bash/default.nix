@@ -67,9 +67,9 @@ in {
       # Shell aliases (same as your zsh ones)
       shellAliases = {
         # Nix aliases
-        nix-switch = "sudo nixos-rebuild switch --flake $HOME/.dotfiles";
-        nix-boot = "sudo nixos-rebuild boot --flake $HOME/.dotfiles";
-        nix-clean = "sudo nix-collect-garbage --delete-old && nix-collect-garbage --delete-old";
+        nix-switch = "/run/wrappers/bin/sudo nixos-rebuild switch --flake $HOME/.dotfiles";
+        nix-boot = "/run/wrappers/bin/sudo nixos-rebuild boot --flake $HOME/.dotfiles";
+        nix-clean = "/run/wrappers/bin/sudo nix-collect-garbage --delete-old && nix-collect-garbage --delete-old";
         
         # Navigation shortcuts
         v = "nvim";

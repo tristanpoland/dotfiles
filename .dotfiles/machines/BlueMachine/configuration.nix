@@ -147,7 +147,7 @@
     desktop.enable = true;
     sddm.enable = true;
     plymouth.enable = true;
-    bash.enable = true;
+    system.bash.enable = true;
     laptop.enable = true;
 
     nvidia = {

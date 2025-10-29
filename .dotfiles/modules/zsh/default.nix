@@ -3,10 +3,10 @@
   config,
   ...
 }: let
-  cfg = config.trident.zsh;
+  cfg = config.trident.bash;
 in {
-  options.trident.zsh.enable = lib.mkEnableOption "activate zsh";
+  options.trident.bash.enable = lib.mkEnableOption "activate bash";
   config = lib.mkIf cfg.enable {
-    programs.zsh.enable = true;
+    programs.bash.enable = true;
   };
 }
