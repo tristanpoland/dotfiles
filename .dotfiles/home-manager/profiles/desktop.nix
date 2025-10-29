@@ -44,6 +44,7 @@
     wl-clipboard-rs
     github-desktop
     microsoft-edge
+    claude-code
     bitwarden-desktop
     blender
     #warp-terminal
