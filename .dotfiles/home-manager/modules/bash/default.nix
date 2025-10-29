@@ -19,8 +19,8 @@ in {
       bashrcExtra = ''
       # Nice, clean bash prompt with git info
       bashrcExtra = ''
-        # Simple colored prompt without git for now
-        PS1="\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;34m\]\h\[\e[0m\]:\[\e[0;33m\]\w\[\e[0m\]\$ "
+        # Simple colored prompt
+        PS1='\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;34m\]\h\[\e[0m\]:\[\e[0;33m\]\w\[\e[0m\]$ '
         
         # Better history
         export HISTSIZE=10000
