@@ -34,6 +34,6 @@ in {
       (lib.hiPrio uutils-coreutils-noprefix)
       git
     ];
-    environment.shells = with pkgs; [];
+    environment.shells = with pkgs; [bash];
   };
 }

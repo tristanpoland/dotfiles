@@ -13,7 +13,7 @@ in {
       isNormalUser = true;
       password = "nixos";
       extraGroups = ["wheel" "docker"] ++ lib.optionals config.networking.networkmanager.enable ["networkmanager"];
-      shell = pkgs.zsh;
+      shell = pkgs.bash;
     };
   };
 }

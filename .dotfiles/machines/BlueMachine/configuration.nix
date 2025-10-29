@@ -2,6 +2,7 @@
   flake-self,
   pkgs,
   config,
+  lib,
   ...
 }: {
   imports = [
@@ -36,33 +37,42 @@
     alsa-utils
   ];
 
-  # SIMPLE, CLEAN PULSEAUDIO SETUP - TWO DEVICES ONLY
-  services.pulseaudio = {
+  # ALLOW PIPEWIRE FOR SCREEN SHARING BUT NOT AUDIO
+  # PipeWire can handle video/screenshare while PulseAudio handles audio
+  services.pipewire = {
     enable = true;
+    # EXPLICITLY DISABLE ALL AUDIO FUNCTIONALITY
+    audio.enable = false;
+    alsa.enable = false;
+    pulse.enable = false;
+    jack.enable = false;
+    # Only allow video/screenshare functionality
+    wireplumber.enable = true;
+  };
+
+  # FORCE PULSEAUDIO FOR ALL AUDIO - NO EXCEPTIONS
+  services.pulseaudio = {
+    enable = lib.mkForce true;
     support32Bit = true;
     package = pkgs.pulseaudioFull;
   };
 
-  # Disable PipeWire completely
-  services.pipewire.enable = false;
-
-    # BOOT SCRIPT TO KILL PIPEWIRE AND ENSURE PULSEAUDIO + DEVICE DETECTION
-  # This handles the implicit modules deps AND detects additional devices
+  # BOOT SCRIPT - ALLOW PIPEWIRE FOR VIDEO, PULSEAUDIO FOR AUDIO
+  # This handles screen sharing while keeping stable audio
   systemd.services.fix-audio = {
-    description = "Kill PipeWire, ensure PulseAudio, and set up device detection";
+    description = "Configure PipeWire for video only, PulseAudio for audio";
     wantedBy = [ "multi-user.target" ];
     after = [ "graphical-session.target" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
       ExecStart = pkgs.writeShellScript "fix-audio" ''
-        # Kill any PipeWire processes
-        ${pkgs.systemd}/bin/systemctl --user stop pipewire pipewire-pulse wireplumber 2>/dev/null || true
-        ${pkgs.procps}/bin/pkill -f pipewire || true
-        ${pkgs.procps}/bin/pkill -f wireplumber || true
+        # Kill only PipeWire AUDIO services (keep video functionality)
+        ${pkgs.systemd}/bin/systemctl --user stop pipewire-pulse 2>/dev/null || true
+        ${pkgs.procps}/bin/pkill -f "pipewire-pulse" || true
         
-        # Remove PipeWire configs that might interfere
-        rm -rf /home/*/pipewire /home/*/.config/pipewire /home/*/.local/state/pipewire || true
+        # Remove PipeWire AUDIO configs but keep video configs
+        rm -rf /home/*/.config/pipewire/pipewire-pulse.conf* || true
         
         # Ensure PulseAudio is running for all users
         for user_home in /home/*; do
@@ -105,7 +115,7 @@
           fi
         done
         
-        echo "Audio setup complete!"
+        echo "Audio: PulseAudio, Video: PipeWire - Setup complete!"
       '';
     };
   };
@@ -137,7 +147,7 @@
     desktop.enable = true;
     sddm.enable = true;
     plymouth.enable = true;
-    zsh.enable = true;
+    bash.enable = true;
     laptop.enable = true;
 
     nvidia = {

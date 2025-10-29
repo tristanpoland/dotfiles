@@ -14,7 +14,7 @@
     neovim.enable = false;
     vscode.enable = true;
     zed.enable = true;
-    zsh.enable = true;
+    bash.enable = true;
     vesktop.enable = true;
     hyfetch.enable = true;
     waybar.enable = false;
