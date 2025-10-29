@@ -19,26 +19,8 @@ in {
       bashrcExtra = ''
       # Nice, clean bash prompt with git info
       bashrcExtra = ''
-        # Git prompt function
-        git_prompt() {
-          local git_status=""
-          local git_branch=""
-          
-          if git rev-parse --git-dir > /dev/null 2>&1; then
-            git_branch=$(git branch 2>/dev/null | grep '^\*' | cut -d' ' -f2-)
-            
-            if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
-              git_status="\[\e[0;31m\]*"
-            else
-              git_status="\[\e[0;32m\]✓"
-            fi
-            
-            echo " \[\e[0;35m\](\[\e[0;36m\]''${git_branch}''${git_status}\[\e[0;35m\])"
-          fi
-        }
-        
-        # Set the prompt
-        PS1="\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;34m\]\h\[\e[0m\]:\[\e[0;33m\]\w\[\e[0m\]\$(git_prompt)\[\e[0;37m\]\$ \[\e[0m\]"
+        # Simple colored prompt without git for now
+        PS1="\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;34m\]\h\[\e[0m\]:\[\e[0;33m\]\w\[\e[0m\]\$ "
         
         # Better history
         export HISTSIZE=10000
