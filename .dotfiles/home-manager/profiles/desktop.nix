@@ -46,8 +46,8 @@
     microsoft-edge
     claude-code
     bitwarden-desktop
-    blender
-    #warp-terminal
+    #blender
+    warp-terminal
     parsec-bin
     stremio
     zoom-us

@@ -183,5 +183,16 @@
     };
   };
 
-  home-manager.users.trident = flake-self.homeConfigurations.trident;
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    extraSpecialArgs = {
+      self = flake-self;
+    };
+    users.trident = {
+      imports = [
+        ../../home-manager/profiles/desktop.nix
+      ] ++ builtins.attrValues flake-self.homeManagerModules;
+    };
+  };
 }
