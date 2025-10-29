@@ -17,16 +17,8 @@ in {
       
             # Nice, clean bash prompt with git info
       bashrcExtra = ''
-        # Color definitions
-        RED='\[\e[0;31m\]'
-        GREEN='\[\e[0;32m\]'
-        YELLOW='\[\e[0;33m\]'
-        BLUE='\[\e[0;34m\]'
-        PURPLE='\[\e[0;35m\]'
-        CYAN='\[\e[0;36m\]'
-        WHITE='\[\e[0;37m\]'
-        RESET='\[\e[0m\]'
-        
+      # Nice, clean bash prompt with git info
+      bashrcExtra = ''
         # Git prompt function
         git_prompt() {
           local git_status=""
@@ -36,17 +28,17 @@ in {
             git_branch=$(git branch 2>/dev/null | grep '^\*' | cut -d' ' -f2-)
             
             if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
-              git_status="$RED*"
+              git_status="\[\e[0;31m\]*"
             else
-              git_status="$GREEN✓"
+              git_status="\[\e[0;32m\]✓"
             fi
             
-            echo " $PURPLE($CYAN$git_branch$git_status$PURPLE)"
+            echo " \[\e[0;35m\](\[\e[0;36m\]$git_branch$git_status\[\e[0;35m\])"
           fi
         }
         
         # Set the prompt
-        PS1="$GREEN\u$RESET@$BLUE\h$RESET:$YELLOW\w$RESET\$(git_prompt)$WHITE\$ $RESET"
+        PS1="\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;34m\]\h\[\e[0m\]:\[\e[0;33m\]\w\[\e[0m\]\$(git_prompt)\[\e[0;37m\]\$ \[\e[0m\]"
         
         # Better history
         export HISTSIZE=10000
