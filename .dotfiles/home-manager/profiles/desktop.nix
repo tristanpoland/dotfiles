@@ -44,6 +44,7 @@
     wl-clipboard-rs
     github-desktop
     microsoft-edge
+    bitwarden-desktop
     #warp-terminal
     parsec-bin
     stremio
