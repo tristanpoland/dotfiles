@@ -25,6 +25,24 @@ in
     # Enable NVIDIA video driver in X
     services.xserver.videoDrivers = [ "nvidia" ];
 
+      # Force NVIDIA as primary GPU for X11 (disable PRIME offloading)
+      services.xserver.deviceSection = ''
+        Option "AllowEmptyInitialConfiguration"
+        Option "UseDisplayDevice" "None"
+        Option "PrimaryGPU" "Yes"
+        Option "BusID" "${cfg.nvidiaBusId}"
+      '';
+
+      # For Wayland (e.g., Hyprland, Sway), set environment variables to force NVIDIA usage
+      environment.sessionVariables = {
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        __NV_PRIME_RENDER_OFFLOAD = "0";
+        __NV_PRIME_RENDER_OFFLOAD_PROVIDER = "";
+        __GL_PRIME_RENDER_OFFLOAD = "0";
+        __GL_PRIME_RENDER_OFFLOAD_PROVIDER = "";
+        CUDA_VISIBLE_DEVICES = "0";
+      };
+
     hardware.nvidia = {
       modesetting.enable = true;
       open = cfg.useOpenDrivers;

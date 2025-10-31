@@ -14,7 +14,7 @@
     neovim.enable = false;
     vscode.enable = true;
     zed.enable = true;
-    bash.enable = true;
+  bash.enable = true;
     vesktop.enable = true;
     hyfetch.enable = true;
     waybar.enable = false;
@@ -43,12 +43,12 @@
     btop
     wl-clipboard-rs
     github-desktop
-#   microsoft-edge
     claude-code
     bitwarden-desktop
     blender
-#   warp-terminal
+    warp-terminal
     parsec-bin
+    powershell
     stremio
     zoom-us
     ghostty
@@ -69,5 +69,13 @@
     wayland
     wayland-protocols
     wayland-scanner
+    davinci-resolve
+    wireshark
+    chromium
+    dbeaver-bin
+    httpie-desktop
+    gdlauncher-carbon
+    youtube-music
+    obs-studio
   ];
 }

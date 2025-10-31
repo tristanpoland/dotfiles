@@ -17,23 +17,38 @@ in {
       
       # Nice, clean bash prompt with git info
       bashrcExtra = ''
-        # Simple colored prompt
-        PS1='\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;34m\]\h\[\e[0m\]:\[\e[0;33m\]\w\[\e[0m\]$ '
-        
-        # Better history
-        export HISTSIZE=10000
-        export HISTFILESIZE=20000
-        export HISTCONTROL=ignoredups:erasedups
-        shopt -s histappend
-        
-        # Better tab completion
-        bind 'set completion-ignore-case on'
-        bind 'set show-all-if-ambiguous on'
-        bind 'set completion-map-case on'
-        
-        # Colorful ls
-        alias ls='ls --color=auto'
-        alias grep='grep --color=auto'
+          # If in devshell and not running bashInteractive, re-exec it for proper keybindings
+          if [ -n "$IN_NIX_SHELL" ] && [ -z "$__BASH_INTERACTIVE" ]; then
+            if [ -x "$(command -v bashInteractive)" ]; then
+              export __BASH_INTERACTIVE=1
+              exec bashInteractive
+            fi
+          fi
+          # Unified prompt logic
+          if [ -n "$IN_NIX_SHELL" ]; then
+            # Devshell prompt: use raw ANSI codes for color
+            PS1='\e[0;35m[DEV]\e[0m \e[0;32m\u\e[0m@\e[0;34m\h\e[0m:\e[0;33m\w\e[0m $ '
+          else
+            # Normal prompt: use non-printing escapes for proper wrapping
+            PS1='\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;34m\]\h\[\e[0m\]:\[\e[0;33m\]\w\[\e[0m\] $ '
+          fi
+
+          # Better history
+          export HISTSIZE=10000
+          export HISTFILESIZE=20000
+          export HISTCONTROL=ignoredups:erasedups
+          if type shopt &>/dev/null; then shopt -s histappend; fi
+
+          # Better tab completion
+          if type bind &>/dev/null; then
+            bind 'set completion-ignore-case on'
+            bind 'set show-all-if-ambiguous on'
+            bind 'set completion-map-case on'
+          fi
+
+          # Colorful ls
+          alias ls='ls --color=auto'
+          alias grep='grep --color=auto'
       '';
       
       # Shell aliases (same as your zsh ones)
