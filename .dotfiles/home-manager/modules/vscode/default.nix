@@ -21,7 +21,7 @@ in {
         enableExtensionUpdateCheck = true;
         userSettings = {
           "settingsSync.enable" = true;
-          #          "editor.cursorSmoothCaretAnimation" = "on";
+          "editor.cursorSmoothCaretAnimation" = "on";
           "editor.smoothScrolling" = true;
           #          "editor.cursorBlinking" = "expand";
           "direnv.restart.automatic" = true;
@@ -30,6 +30,9 @@ in {
           "clangd.path" = "${pkgs.clang-tools}/bin/clangd";
           "svelte.enable-ts-plugin" = true;
           "rust-analyzer" = {
+            "server" = {
+              "path" = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+            };
             "check" = {
               "command" = "clippy";
             };

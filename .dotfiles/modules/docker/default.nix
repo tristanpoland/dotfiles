@@ -14,8 +14,8 @@ in {
   };
   config = lib.mkIf cfg.enable {
     virtualisation.docker = {
-        enable = true;
-        storageDriver = "overlay2";
+      enable = true;
+      storageDriver = "overlay2";
       liveRestore = true;
       rootless = {
         enable = cfg.rootlessDaemon;

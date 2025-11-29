@@ -1,9 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.trident.nvidia;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.trident.nvidia;
+in {
   options.trident.nvidia = {
     enable = lib.mkEnableOption "Enable NVIDIA GPU support";
     useOpenDrivers = lib.mkOption {
@@ -23,25 +25,25 @@ in
 
   config = lib.mkIf cfg.enable {
     # Enable NVIDIA video driver in X
-    services.xserver.videoDrivers = [ "nvidia" ];
+    services.xserver.videoDrivers = ["nvidia"];
 
-      # Force NVIDIA as primary GPU for X11 (disable PRIME offloading)
-      services.xserver.deviceSection = ''
-        Option "AllowEmptyInitialConfiguration"
-        Option "UseDisplayDevice" "None"
-        Option "PrimaryGPU" "Yes"
-        Option "BusID" "${cfg.nvidiaBusId}"
-      '';
+    # Force NVIDIA as primary GPU for X11 (disable PRIME offloading)
+    services.xserver.deviceSection = ''
+      Option "AllowEmptyInitialConfiguration"
+      Option "UseDisplayDevice" "None"
+      Option "PrimaryGPU" "Yes"
+      Option "BusID" "${cfg.nvidiaBusId}"
+    '';
 
-      # For Wayland (e.g., Hyprland, Sway), set environment variables to force NVIDIA usage
-      environment.sessionVariables = {
-        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        __NV_PRIME_RENDER_OFFLOAD = "0";
-        __NV_PRIME_RENDER_OFFLOAD_PROVIDER = "";
-        __GL_PRIME_RENDER_OFFLOAD = "0";
-        __GL_PRIME_RENDER_OFFLOAD_PROVIDER = "";
-        CUDA_VISIBLE_DEVICES = "0";
-      };
+    # For Wayland (e.g., Hyprland, Sway), set environment variables to force NVIDIA usage
+    environment.sessionVariables = {
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      __NV_PRIME_RENDER_OFFLOAD = "0";
+      __NV_PRIME_RENDER_OFFLOAD_PROVIDER = "";
+      __GL_PRIME_RENDER_OFFLOAD = "0";
+      __GL_PRIME_RENDER_OFFLOAD_PROVIDER = "";
+      CUDA_VISIBLE_DEVICES = "0";
+    };
 
     hardware.nvidia = {
       modesetting.enable = true;
@@ -53,7 +55,7 @@ in
     };
 
     # Ensure NVIDIA modules load early
-    boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+    boot.extraModulePackages = [config.boot.kernelPackages.nvidia_x11];
 
     # Kernel parameters for suspend/resume
     boot.kernelParams = [

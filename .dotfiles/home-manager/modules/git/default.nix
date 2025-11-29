@@ -17,7 +17,7 @@ in {
         user = {
           name = "trident";
           email = "redstonecrafter126@@gmail.com";
-        #  signingKey = "Trident_For_U";
+          #  signingKey = "Trident_For_U";
         };
         #commit.gpgsign = true;
         init.defaultBranch = "main";

@@ -78,8 +78,8 @@
       zls.enable = true;
       rust_analyzer = {
         enable = true;
-        installRustc = false;
-        installCargo = false;
+        installRustc = true;
+        installCargo = true;
         settings = {
           imports = {
             granularity.group = "crate";

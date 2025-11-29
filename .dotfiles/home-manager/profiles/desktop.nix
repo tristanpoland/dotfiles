@@ -58,7 +58,6 @@
     mpv
     openssl
     protobuf
-    rust-analyzer # Used when running
     pkg-config
     alsa-lib
     alsa-utils
@@ -77,5 +76,19 @@
     gdlauncher-carbon
     youtube-music
     obs-studio
+    libreoffice-qt6-fresh
+    virtualbox
+    inkscape
+    krita
+    gimp
+    github-copilot-cli
+    # USB capture card support
+    usbutils
+    v4l-utils
+    ffmpeg-full
+    msedit
+    kdePackages.plasma-browser-integration
+    powershell
+    geekbench
   ];
 }

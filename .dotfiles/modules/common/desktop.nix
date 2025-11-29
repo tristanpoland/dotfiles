@@ -20,7 +20,7 @@ in {
 
     security.rtkit.enable = true;
     # Audio configuration moved to machine-specific config
-    # 
+    #
     # NOTE: Audio is configured per-machine because different hardware
     # requires different setups. Current options:
     #

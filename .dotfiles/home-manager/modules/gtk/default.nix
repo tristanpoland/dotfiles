@@ -18,5 +18,8 @@ in {
         name = "Dracula";
       };
     };
+    home.activation.removeGtkrcBackups = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
+      rm -f "$HOME/.gtkrc-2.0.*.bkp"
+    '';
   };
 }
