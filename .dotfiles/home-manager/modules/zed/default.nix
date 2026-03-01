@@ -26,7 +26,8 @@ in {
       extraPackages = [pkgs.nixd pkgs.nil];
       userSettings = {
         icon_theme = "JetBrains New UI Icons (Dark)";
-        theme = "Catppuccin Espresso (Blur) [Heavy]";
+        editor_font_family = "Jetbrains Mono";
+        theme = "Catppuccin Espresso (Blur) [Light]";
         inlay_hints = {
           enabled = true;
         };

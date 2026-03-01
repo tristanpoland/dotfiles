@@ -14,7 +14,7 @@
     neovim.enable = false;
     vscode.enable = true;
     zed.enable = true;
-  bash.enable = true;
+    bash.enable = true;
     vesktop.enable = true;
     hyfetch.enable = true;
     waybar.enable = false;
@@ -46,7 +46,7 @@
     claude-code
     bitwarden-desktop
     blender
-    warp-terminal
+    #warp-terminal
     parsec-bin
     powershell
     stremio
@@ -75,6 +75,7 @@
     httpie-desktop
     gdlauncher-carbon
     youtube-music
+    tokei
     obs-studio
     libreoffice-qt6-fresh
     virtualbox
@@ -89,6 +90,7 @@
     msedit
     kdePackages.plasma-browser-integration
     powershell
-    geekbench
+    firefox
+    drawio
   ];
 }

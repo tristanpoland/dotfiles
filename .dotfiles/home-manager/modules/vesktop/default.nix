@@ -139,8 +139,8 @@ in {
         };
         themeLinks = cfg.themeLinks;
         useQuickCss = true;
-        winNativeTitleBar = false;
-        frameless = true;
+        winNativeTitleBar = true;
+        frameless = false;
         transparent = true;
       };
     };

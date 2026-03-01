@@ -22,7 +22,7 @@ in {
         userSettings = {
           "settingsSync.enable" = true;
           "editor.cursorSmoothCaretAnimation" = "on";
-          "editor.smoothScrolling" = true;
+          "editor.smoothScrolling" = false;
           #          "editor.cursorBlinking" = "expand";
           "direnv.restart.automatic" = true;
           "workbench.colorTheme" = "Material Deep Ocean";

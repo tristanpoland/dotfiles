@@ -180,13 +180,20 @@
 
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_zen;
-    # Kernel modules for USB capture cards
-    kernelModules = [ "uvcvideo" "v4l2loopback" ];
+  
+    kernelModules = [
+      "uvcvideo"
+      "v4l2loopback"
+      "rtw89_pci"
+    ];
+  
     extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+  
     extraModprobeConfig = ''
       options uvcvideo quirks=128
       options v4l2loopback devices=1 video_nr=10 card_label="OBS Cam" exclusive_caps=1
     '';
+  
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
@@ -194,12 +201,22 @@
     };
   };
 
+
   networking = {
     hostName = "BlueMachine";
     networkmanager = {
       enable = true;
     };
   };
+
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowUnfreePredicate = _: true;
+  };
+
+  hardware.enableRedistributableFirmware = true;
+  hardware.enableAllFirmware = true;
+
 
   home-manager.users.trident = flake-self.homeConfigurations.trident;
 }
