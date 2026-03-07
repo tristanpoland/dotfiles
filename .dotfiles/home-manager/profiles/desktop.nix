@@ -9,7 +9,7 @@
     ./common.nix
   ];
   trident = {
-    zen-browser.enable = true;
+    zen-browser.enable = false;
     kitty.enable = false;
     neovim.enable = false;
     vscode.enable = true;
@@ -90,7 +90,8 @@
     msedit
     kdePackages.plasma-browser-integration
     powershell
-    firefox
+    vivaldi
     drawio
+    pear-desktop
   ];
 }

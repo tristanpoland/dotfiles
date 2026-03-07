@@ -12,7 +12,7 @@ in {
       home = "/home/trident";
       isNormalUser = true;
       password = "nixos";
-      extraGroups = ["wheel" "docker" "video"] ++ lib.optionals config.networking.networkmanager.enable ["networkmanager"];
+      extraGroups = ["wheel" "docker" "video" "audio"] ++ lib.optionals config.networking.networkmanager.enable ["networkmanager"];
       shell = pkgs.bash;
     };
   };

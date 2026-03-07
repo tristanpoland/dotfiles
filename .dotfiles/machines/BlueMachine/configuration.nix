@@ -57,8 +57,19 @@
     extraConfig = ''
       load-module module-bluetooth-policy
       load-module module-bluetooth-discover
+      load-module module-bluez5-device
       load-module module-switch-on-connect
       load-module module-alsa-source device=hw:2,0
+      # Prevent auto-loading of Bluetooth microphone modules
+      .nofail
+      .ifexists module-bluez5-source.so
+      .nofail
+      .ifexists module-bluetooth-source.so
+      # Do not load these modules
+      .endif
+      .endif
+      # Force A2DP profile, block HSP/HFP
+      bluetooth.profile = "a2dp_sink"
     '';
   };
 
@@ -106,16 +117,17 @@
             ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl set-default-sink alsa_output.pci-0000_00_1f.3.analog-stereo 2>/dev/null || true
 
             # Auto-detect and prefer USB/external devices if available
-            usb_sink=$(${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl list short sinks 2>/dev/null | grep -i "usb\|headset\|wireless" | head -1 | cut -f2)
-            if [ -n "$usb_sink" ]; then
-              echo "Found external audio device: $usb_sink"
-              ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl set-default-sink "$usb_sink" 2>/dev/null || true
+            bt_sink=$(${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl list short sinks 2>/dev/null | grep -i "bluez\|usb\|headset\|wireless" | head -1 | cut -f2)
+            if [ -n "$bt_sink" ]; then
+              echo "Found external or Bluetooth audio device: $bt_sink"
+              ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl set-default-sink "$bt_sink" 2>/dev/null || true
             fi
 
-            usb_source=$(${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl list short sources 2>/dev/null | grep -i "usb\|headset\|wireless" | head -1 | cut -f2)
-            if [ -n "$usb_source" ]; then
-              echo "Found external microphone: $usb_source"
-              ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl set-default-source "$usb_source" 2>/dev/null || true
+            # Only set USB/headset/wireless sources as default, not Bluetooth
+            ext_source=$(${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl list short sources 2>/dev/null | grep -i "usb\|headset\|wireless" | head -1 | cut -f2)
+            if [ -n "$ext_source" ]; then
+              echo "Found external microphone: $ext_source"
+              ${pkgs.sudo}/bin/sudo -u "$user" ${pkgs.pulseaudio}/bin/pactl set-default-source "$ext_source" 2>/dev/null || true
             fi
           fi
         done
@@ -207,6 +219,7 @@
     networkmanager = {
       enable = true;
     };
+      firewall.enable = false;
   };
 
   nixpkgs.config = {
